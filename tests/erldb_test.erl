@@ -7,7 +7,6 @@ start_stop_test_() ->
         fun stop/1, [
             fun write_success/0,
             fun read_success/0,
-            fun double_write/0,
             fun delete_success/0
         ]
     }.
@@ -19,18 +18,15 @@ stop(_) ->
     erldb:stop().
 
 write_success() ->
-    State = erldb:init(),
-    ?assertEqual({ok, [{key, value}]}, erldb:set(State, key, value)).
+    Db = erldb:init(),
+    ?assertEqual(ok, erldb:set(key, value, Db)).
 
 read_success() ->
-    {_, State} = erldb:set([], key, value),
-    ?assertEqual({ok, value}, erldb:get(State, key)).
-
-double_write() ->
-    {_, State} = erldb:set([], key, value),
-    ?assertEqual({ok, [{key, new_value}]}, erldb:set(State, key, new_value)),
-    ?assertEqual({ok, [{key, value}, {new_key, value}]}, erldb:set(State, new_key, value)).
+    Db = erldb:init(),
+    erldb:set(key, value, Db),
+    ?assertEqual({ok, value}, erldb:get(key, Db)).
 
 delete_success() ->
-    {_, State} = erldb:set([], key, value),
-    ?assertEqual({ok, []}, erldb:delete(State, key)).
+    Db = erldb:init(),
+    erldb:set(key, value, Db),
+    ?assertEqual(ok, erldb:delete(key, Db)).
