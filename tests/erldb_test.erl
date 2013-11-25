@@ -18,15 +18,15 @@ stop(_) ->
     erldb:stop().
 
 write_success() ->
-    Db = erldb:init(),
+    {ok, Db} = erldb:init(),
     ?assertEqual(ok, erldb:set(key, value, Db)).
 
 read_success() ->
-    Db = erldb:init(),
+    {ok, Db} = erldb:init(),
     erldb:set(key, value, Db),
     ?assertEqual({ok, value}, erldb:get(key, Db)).
 
 delete_success() ->
-    Db = erldb:init(),
+    {ok, Db} = erldb:init(),
     erldb:set(key, value, Db),
     ?assertEqual(ok, erldb:delete(key, Db)).
